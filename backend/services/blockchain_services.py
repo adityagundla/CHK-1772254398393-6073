@@ -37,17 +37,14 @@ def send_transaction(tx):
 
 def register_data(name, description, data_hash=None):
 
-    # The contract ABI expects 3 string arguments for registerData.
-    # We pass a hash string (or repeat name) to satisfy the ABI.
     if data_hash is None:
         data_hash = name
 
     nonce = w3.eth.get_transaction_count(ACCOUNT_ADDRESS)
 
     tx = contract.functions.registerData(
-        name,
-        description,
-        data_hash
+        data_hash,
+        name
     ).build_transaction({
         "from": ACCOUNT_ADDRESS,
         "nonce": nonce,
@@ -81,13 +78,15 @@ def get_request_count(data_id):
 
 def get_data(data_id):
 
-    data = contract.functions.getData(data_id).call()
+    data = contract.functions.dataRecords(data_id).call()
 
     return {
-        "id": data_id,
-        "owner": data[0],
-        "name": data[1],
-        "description": data[2]
+        "id": data[0],
+        "owner": data[1],
+        "ipfsHash": data[2],      # this holds the Pinata Hash (dataHash)
+        "name": data[3],          # this holds the File Name (description)
+        "description": data[3],   # fallback map to name
+        "createdAt": data[4]
     }
 
 def get_all_data():
@@ -95,12 +94,14 @@ def get_all_data():
     all_data = []
     for i in range(1, count + 1):
         try:
-            data = contract.functions.getData(i).call()
+            data = contract.functions.dataRecords(i).call()
             all_data.append({
-                "id": i,
-                "owner": data[0],
-                "name": data[1],
-                "description": data[2]
+                "id": data[0],
+                "owner": data[1],
+                "ipfsHash": data[2],
+                "name": data[3],
+                "description": data[3],
+                "createdAt": data[4]
             })
         except Exception:
             continue

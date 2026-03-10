@@ -1,0 +1,207 @@
+﻿On branch master
+Your branch and 'origin/master' have diverged,
+and have 1 and 1 different commits each, respectively.
+  (use "git pull" if you want to integrate the remote branch with yours)
+
+No commands done.
+Next command to do (1 remaining command):
+   pick b66ae3e3 # Updated for using Ipfs as Storage
+  (use "git rebase --edit-todo" to view and edit)
+You are currently editing a commit while rebasing branch 'master' on '5df3cffa'.
+  (use "git commit --amend" to amend the current commit)
+  (use "git rebase --continue" once you are satisfied with your changes)
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	deleted:    backend/.env
+	deleted:    backend/services/__pycache__/pinata_service.cpython-310.pyc
+	deleted:    backend/services/ipfs_service.py
+	deleted:    backend/services/pinata_service.py
+	deleted:    frontend/org-frontend/node_modules/.vite/deps/@supabase_supabase-js.js
+	deleted:    frontend/org-frontend/node_modules/.vite/deps/@supabase_supabase-js.js.map
+	deleted:    frontend/org-frontend/node_modules/.vite/deps/chunk-5HODL5IH.js
+	deleted:    frontend/org-frontend/node_modules/.vite/deps/chunk-5HODL5IH.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/LICENSE
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/README.md
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/AuthAdminApi.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/AuthAdminApi.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/AuthAdminApi.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/AuthAdminApi.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/AuthClient.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/AuthClient.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/AuthClient.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/AuthClient.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/GoTrueAdminApi.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/GoTrueAdminApi.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/GoTrueAdminApi.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/GoTrueAdminApi.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/GoTrueClient.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/GoTrueClient.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/GoTrueClient.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/GoTrueClient.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/index.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/index.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/index.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/index.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/base64url.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/base64url.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/base64url.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/base64url.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/constants.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/constants.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/constants.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/constants.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/error-codes.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/error-codes.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/error-codes.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/error-codes.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/errors.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/errors.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/errors.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/errors.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/fetch.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/fetch.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/fetch.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/fetch.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/helpers.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/helpers.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/helpers.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/helpers.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/local-storage.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/local-storage.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/local-storage.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/local-storage.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/locks.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/locks.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/locks.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/locks.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/polyfills.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/polyfills.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/polyfills.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/polyfills.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/types.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/types.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/types.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/types.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/version.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/version.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/version.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/version.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/web3/ethereum.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/web3/ethereum.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/web3/ethereum.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/web3/ethereum.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/web3/solana.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/web3/solana.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/web3/solana.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/web3/solana.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/webauthn.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/webauthn.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/webauthn.dom.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/webauthn.dom.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/webauthn.dom.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/webauthn.dom.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/webauthn.errors.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/webauthn.errors.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/webauthn.errors.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/webauthn.errors.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/webauthn.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/main/lib/webauthn.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/AuthAdminApi.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/AuthAdminApi.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/AuthAdminApi.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/AuthAdminApi.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/AuthClient.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/AuthClient.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/AuthClient.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/AuthClient.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/GoTrueAdminApi.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/GoTrueAdminApi.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/GoTrueAdminApi.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/GoTrueAdminApi.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/GoTrueClient.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/GoTrueClient.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/GoTrueClient.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/GoTrueClient.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/index.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/index.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/index.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/index.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/base64url.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/base64url.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/base64url.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/base64url.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/constants.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/constants.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/constants.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/constants.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/error-codes.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/error-codes.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/error-codes.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/error-codes.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/errors.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/errors.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/errors.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/errors.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/fetch.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/fetch.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/fetch.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/fetch.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/helpers.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/helpers.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/helpers.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/helpers.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/local-storage.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/local-storage.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/local-storage.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/local-storage.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/locks.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/locks.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/locks.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/locks.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/polyfills.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/polyfills.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/polyfills.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/polyfills.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/types.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/types.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/types.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/types.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/version.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/version.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/version.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/version.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/web3/ethereum.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/web3/ethereum.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/web3/ethereum.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/web3/ethereum.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/web3/solana.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/web3/solana.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/web3/solana.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/web3/solana.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/webauthn.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/webauthn.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/webauthn.dom.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/webauthn.dom.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/webauthn.dom.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/webauthn.dom.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/webauthn.errors.d.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/webauthn.errors.d.ts.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/webauthn.errors.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/webauthn.errors.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/webauthn.js
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/module/lib/webauthn.js.map
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/tsconfig.module.tsbuildinfo
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/dist/tsconfig.tsbuildinfo
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/package.json
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/src/AuthAdminApi.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/src/AuthClient.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/src/GoTrueAdminApi.ts
+	deleted:    frontend/org-frontend/node_modules/@supabase/auth-js/src/GoTrueClient.ts
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	.git_status.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")

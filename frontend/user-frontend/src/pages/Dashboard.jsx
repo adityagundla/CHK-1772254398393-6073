@@ -22,13 +22,19 @@ const Dashboard = () => {
       // Connect to backend API
       const allData = await fetchAllData();
       
-      const documents = allData.map((d, index) => ({
-        id: index + 1,
-        name: d.name || 'Document',
-        date: new Date().toISOString().split('T')[0],
-        status: 'Verified',
-        owner: d.owner
-      }));
+      const documents = allData.map((d, index) => {
+        let dateStr = new Date().toISOString().split('T')[0];
+        if (d.createdAt) {
+          dateStr = new Date(parseInt(d.createdAt) * 1000).toISOString().split('T')[0];
+        }
+        return {
+          id: index + 1,
+          name: d.name || 'Document',
+          date: dateStr,
+          status: 'Verified',
+          owner: d.owner
+        };
+      });
 
       // Get requests from localStorage for now, since we lack a GET requests endpoint in app.py
       const storedRequests = JSON.parse(localStorage.getItem('accessRequests') || '[]');

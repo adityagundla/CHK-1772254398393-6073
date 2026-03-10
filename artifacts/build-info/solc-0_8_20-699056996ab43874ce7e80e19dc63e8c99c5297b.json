@@ -1,0 +1,47 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_20-699056996ab43874ce7e80e19dc63e8c99c5297b",
+  "solcVersion": "0.8.20",
+  "solcLongVersion": "0.8.20+commit.a1b79de6",
+  "userSourceNameMap": {
+    "contracts/AccessControl.sol": "project/contracts/AccessControl.sol",
+    "contracts/DataMarketPlace.sol": "project/contracts/DataMarketPlace.sol",
+    "contracts/DataOwnerShip.sol": "project/contracts/DataOwnerShip.sol",
+    "contracts/RegistryData.sol": "project/contracts/RegistryData.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "paris",
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/AccessControl.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.20;\r\n\r\ncontract AccessControl {\r\n\r\n    struct AccessRequest {\r\n        uint dataId;\r\n        address requester;\r\n        bool approved;\r\n        uint timestamp;\r\n    }\r\n    mapping(uint => address) public dataOwner;\r\n    mapping(uint => AccessRequest[]) public accessRequests;\r\n    mapping(uint => mapping(address => bool)) public accessPermissions;\r\n    event DataRegistered(uint dataId, address owner);\r\n\r\n    event AccessRequested(\r\n        uint dataId,\r\n        address requester\r\n    );\r\n\r\n    event AccessGranted(\r\n        uint dataId,\r\n        address requester\r\n    );\r\n\r\n    event AccessRevoked(\r\n        uint dataId,\r\n        address requester\r\n    );\r\n\r\n    function registerData(uint _dataId) public {\r\n        require(dataOwner[_dataId] == address(0), \"Data already registered\");\r\n        dataOwner[_dataId] = msg.sender;\r\n        emit DataRegistered(_dataId, msg.sender);\r\n    }\r\n\r\n    function requestAccess(uint _dataId) public {\r\n        require(dataOwner[_dataId] != address(0), \"Data not found\");\r\n\r\n        accessRequests[_dataId].push(\r\n            AccessRequest(\r\n                _dataId,\r\n                msg.sender,\r\n                false,\r\n                block.timestamp\r\n            )\r\n        );\r\n        emit AccessRequested(_dataId, msg.sender);\r\n    }\r\n    function grantAccess(uint _dataId, address _requester) public {\r\n\r\n        require(msg.sender == dataOwner[_dataId], \"Only owner can grant\");\r\n        accessPermissions[_dataId][_requester] = true;\r\n        emit AccessGranted(_dataId, _requester);\r\n    }\r\n    function revokeAccess(uint _dataId, address _requester) public {\r\n\r\n        require(msg.sender == dataOwner[_dataId], \"Only owner can revoke\");\r\n        accessPermissions[_dataId][_requester] = false;\r\n\r\n        emit AccessRevoked(_dataId, _requester);\r\n    }\r\n    function checkAccess(uint _dataId, address _user)public  view returns(bool)\r\n    {\r\n        return accessPermissions[_dataId][_user];\r\n    }\r\n    function getRequestCount(uint _dataId) public view  returns(uint)\r\n    {\r\n        return accessRequests[_dataId].length;\r\n    }\r\n}"
+      },
+      "project/contracts/DataMarketPlace.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.20;\r\n\r\ncontract DataMarketplace {\r\n\r\n    struct Listing {\r\n        uint dataId;\r\n        address owner;\r\n        uint price;\r\n        bool active;\r\n    }\r\n    mapping(uint => Listing) public listings;\r\n    event DataListed( uint dataId, uint price );\r\n\r\n    event DataPurchased(  uint dataId, address buyer );\r\n\r\n    function listData(uint _dataId,uint _price ) public {\r\n        listings[_dataId] = Listing(\r\n            _dataId,\r\n            msg.sender,\r\n            _price,\r\n            true\r\n        );\r\n        emit DataListed(\r\n            _dataId,\r\n            _price\r\n        );\r\n    }\r\n\r\n    function buyData(uint _dataId) public payable {\r\n        Listing storage item = listings[_dataId];\r\n        require(item.active, \"Not active\");\r\n        require(\r\n            msg.value >= item.price,\r\n            \"Insufficient payment\"\r\n        );\r\n        payable(item.owner).transfer(msg.value);\r\n        emit DataPurchased(\r\n            _dataId,\r\n            msg.sender\r\n        );\r\n    }\r\n}"
+      },
+      "project/contracts/DataOwnerShip.sol": {
+        "content": "//SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.20;\r\n\r\ncontract DataOwnerShip {\r\n    struct Data {\r\n       address owner;\r\n       string ipfshash;\r\n\r\n    }\r\n    mapping (uint => Data) public  dataRecords;\r\n    uint public dataCount;\r\n\r\n    function  registerData(string memory _hash) public {\r\n        dataCount++;\r\n        dataRecords[dataCount] = Data(msg.sender, _hash);\r\n        \r\n    }\r\n    function getData(uint _id)  public  view returns (address, string memory) {\r\n        Data memory data = dataRecords[_id];\r\n        return (data.owner, data.ipfshash);\r\n        \r\n    }\r\n}"
+      },
+      "project/contracts/RegistryData.sol": {
+        "content": "// SPDX-License-Identifier: MIT\r\npragma solidity ^0.8.20;\r\n\r\ncontract DataRegistry {\r\n\r\n    struct DataRecord {\r\n        uint dataId;\r\n        address owner;\r\n        string ipfsHash;\r\n        string description;\r\n        uint createdAt;\r\n    }\r\n    uint public dataCount;\r\n    mapping(uint => DataRecord) public dataRecords;\r\n\r\n    event DataRegistered(\r\n        uint indexed dataId,\r\n        address indexed owner,\r\n        string ipfsHash\r\n    );\r\n    event DataUpdated(\r\n        uint indexed dataId,\r\n        string newHash\r\n    );\r\n    modifier onlyOwner(uint _dataId) {\r\n        require(\r\n            dataRecords[_dataId].owner == msg.sender,\r\n            \"Not the data owner\"\r\n        ); _;\r\n    }\r\n    function registerData(  string memory _ipfsHash,string memory _description  ) public {\r\n        dataCount++;\r\n        dataRecords[dataCount] = DataRecord(\r\n            dataCount,\r\n            msg.sender,\r\n            _ipfsHash,\r\n            _description,\r\n            block.timestamp\r\n        );\r\n\r\n        emit DataRegistered(\r\n            dataCount,\r\n            msg.sender,\r\n            _ipfsHash\r\n        );\r\n    }\r\n\r\n    function updateDataHash( uint _dataId,  string memory _newHash   )  public onlyOwner(_dataId)\r\n    {\r\n\r\n        dataRecords[_dataId].ipfsHash = _newHash;\r\n\r\n        emit DataUpdated(\r\n            _dataId,\r\n            _newHash\r\n        );\r\n    }\r\n\r\n    function getData(uint _dataId)   public  view returns(  address,string memory,string memory, uint)\r\n    {\r\n        DataRecord memory record = dataRecords[_dataId];\r\n        return (\r\n            record.owner,\r\n            record.ipfsHash,\r\n            record.description,\r\n            record.createdAt\r\n        );\r\n    }\r\n\r\n    function getOwner(uint _dataId)  public view returns(address)\r\n    {\r\n        return dataRecords[_dataId].owner;\r\n    }\r\n}"
+      }
+    }
+  }
+}

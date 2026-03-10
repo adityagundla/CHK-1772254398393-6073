@@ -14,16 +14,22 @@ const DataWallet = () => {
   const fetchDocuments = async () => {
     try {
       const data = await fetchAllData();
-      const mockDocs = data.map((item) => ({
-        id: item.id,
-        name: item.name,
-        type: 'DOC',
-        size: '1.0 MB',
-        date: new Date().toISOString().split('T')[0],
-        ipfsHash: item.name,
-        blockchainTx: item.description,
-        sharedWith: []
-      }));
+      const mockDocs = data.map((item) => {
+        let dateStr = new Date().toISOString().split('T')[0];
+        if (item.createdAt) {
+          dateStr = new Date(parseInt(item.createdAt) * 1000).toISOString().split('T')[0];
+        }
+        return {
+          id: item.id,
+          name: item.name,
+          type: 'DOC',
+          size: '1.0 MB',
+          date: dateStr,
+          ipfsHash: item.ipfsHash ? `https://gateway.pinata.cloud/ipfs/${item.ipfsHash}` : '',
+          blockchainTx: item.description,
+          sharedWith: []
+        };
+      });
 
       // Filter unique by id/name from mockDocs (Blockchain returned docs)
       const uniqueDocs = Array.from(new Map(mockDocs.map(item => [item.name, item])).values());

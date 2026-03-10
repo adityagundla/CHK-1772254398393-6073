@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from services.pinata_service import upload_to_pinata
 from services.blockchain_services import (
     register_data,
     get_data,
@@ -12,6 +13,19 @@ from services.blockchain_services import (
 
 data_routes = Blueprint("data_routes", __name__)
 
+@data_routes.route("/upload", methods=["POST"])
+def upload_file():
+    try:
+        file = request.files["file"]
+        result = upload_to_pinata(file)
+        
+        if "IpfsHash" in result:
+            return jsonify({"ipfsHash": result["IpfsHash"]})
+        else:
+            return jsonify({"error": "Pinata upload failed", "details": result}), 500
+    except Exception as e:
+        print(f"Upload Error: {e}")
+        return jsonify({"error": "An error occurred during upload", "message": str(e)}), 500
 
 @data_routes.route("/register", methods=["POST"])
 def register():
@@ -72,8 +86,14 @@ def fetch_data(data_id):
 
 @data_routes.route("/all-data", methods=["GET"])
 def fetch_all_data():
-    data_list = get_all_data()
-    return jsonify(data_list)
+    try:
+        data_list = get_all_data()
+        return jsonify(data_list)
+    except Exception as e:
+        print(f"Blockchain Error in get_all_data: {e}")
+        # Return empty list gracefully so the frontend DataWallet doesn't crash 
+        # or misinterpret it as a CORS error if Ganache isn't running/deployed.
+        return jsonify([])
 
 
 @data_routes.route("/grant-access", methods=["POST"])

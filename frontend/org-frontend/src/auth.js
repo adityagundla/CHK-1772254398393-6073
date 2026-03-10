@@ -1,26 +1,10 @@
-// Simple org auth implementation for local demo (not secure; for prototyping only)
+import { supabase } from './supabase';
 
-const ORGS_KEY = 'organizations';
 const TOKEN_KEY = 'token';
 const USER_TYPE_KEY = 'userType';
 const ORG_DATA_KEY = 'orgData';
 
-const generateToken = () =>
-  Math.random().toString(36).substring(2) + Date.now().toString(36);
-
-const loadOrgs = () => {
-  try {
-    return JSON.parse(localStorage.getItem(ORGS_KEY) || '[]');
-  } catch {
-    return [];
-  }
-};
-
-const saveOrgs = (orgs) => {
-  localStorage.setItem(ORGS_KEY, JSON.stringify(orgs));
-};
-
-export const signupOrg = ({
+export const signupOrg = async ({
   orgName,
   orgEmail,
   orgId,
@@ -31,76 +15,85 @@ export const signupOrg = ({
   phone,
   website
 }) => {
-  let orgs = loadOrgs();
+  const { data, error } = await supabase.auth.signUp({
+    email: orgEmail,
+    password,
+    options: {
+      data: {
+        orgName,
+        orgId,
+        registrationNumber,
+        type: 'organization',
+        orgType,
+        address,
+        phone,
+        website
+      }
+    }
+  });
 
-  // If an organization already exists with this email or ID, replace it
-  orgs = orgs.filter((org) => !(org.email === orgEmail || org.id === orgId));
+  if (error) {
+    throw new Error(error.message);
+  }
 
   const orgData = {
     id: orgId,
-    uid: generateToken(),
+    uid: data.user?.id,
     name: orgName,
     email: orgEmail,
-    password,
     registrationNumber,
     type: orgType,
     address,
     phone,
     website,
     verified: false,
-    registeredAt: new Date().toISOString()
+    registeredAt: data.user?.created_at
   };
 
-  orgs.push(orgData);
-  saveOrgs(orgs);
-
-  const token = generateToken();
-  localStorage.setItem(TOKEN_KEY, token);
+  localStorage.setItem(TOKEN_KEY, data.session?.access_token || 'pending');
   localStorage.setItem(USER_TYPE_KEY, 'organization');
   localStorage.setItem(ORG_DATA_KEY, JSON.stringify(orgData));
   window.dispatchEvent(new Event('storage'));
 
-  return { orgData, token };
+  return { orgData, token: data.session?.access_token };
 };
 
-export const loginOrg = ({ email, password, orgId }) => {
-  const orgs = loadOrgs();
-  let org = orgs.find((o) => o.email === email || o.id === orgId);
+export const loginOrg = async ({ email, password, orgId }) => {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
 
-  // If the org doesn't exist yet, create it with minimal info.
-  if (!org) {
-    org = {
-      id: orgId,
-      uid: generateToken(),
-      name: email.split('@')[0] + ' Corp',
-      email,
-      password,
-      registrationNumber: orgId,
-      type: 'financial',
-      address: '',
-      phone: '',
-      website: '',
-      verified: true,
-      registeredAt: new Date().toISOString()
-    };
-    orgs.push(org);
-    saveOrgs(orgs);
+  if (error) {
+    throw new Error(error.message);
   }
 
-  if (org.password !== password) {
-    throw new Error('Invalid email, organization ID, or password');
-  }
+  const meta = data.user.user_metadata || {};
+  
+  const org = {
+    id: meta.orgId || orgId || 'unknown',
+    uid: data.user.id,
+    name: meta.orgName || email.split('@')[0] + ' Corp',
+    email,
+    registrationNumber: meta.registrationNumber || '',
+    type: meta.orgType || 'other',
+    address: meta.address || '',
+    phone: meta.phone || '',
+    website: meta.website || '',
+    verified: true,
+    registeredAt: data.user.created_at
+  };
 
-  const token = generateToken();
-  localStorage.setItem(TOKEN_KEY, token);
+  localStorage.setItem(TOKEN_KEY, data.session.access_token);
   localStorage.setItem(USER_TYPE_KEY, 'organization');
   localStorage.setItem(ORG_DATA_KEY, JSON.stringify(org));
   window.dispatchEvent(new Event('storage'));
 
-  return { orgData: org, token };
+  return { orgData: org, token: data.session.access_token };
 };
 
-export const logout = () => {
+export const logout = async () => {
+  await supabase.auth.signOut();
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(USER_TYPE_KEY);
   localStorage.removeItem(ORG_DATA_KEY);

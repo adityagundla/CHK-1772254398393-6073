@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { supabase } from '../../supabase';
 
 const OrgDocuments = () => {
   const { userId } = useParams();
@@ -21,15 +22,33 @@ const OrgDocuments = () => {
 
     setUser(userInfo);
 
-    // Load docs uploaded by this user
-    let userDocs = JSON.parse(localStorage.getItem('userDocs') || '{}');
-    if (!userDocs || Array.isArray(userDocs)) {
-      userDocs = {};
-    }
-
-    const docs = userDocs[userId] || [];
-
-    setDocuments(docs);
+    const fetchDocs = async () => {
+      const { data: dbDocs, error } = await supabase
+        .from('documents')
+        .select('*')
+        .eq('user_id', userId);
+      
+      if (!error && dbDocs) {
+        setDocuments(dbDocs.map(doc => ({
+          id: doc.id,
+          name: doc.name,
+          type: doc.type,
+          size: doc.size,
+          date: new Date(doc.created_at).toISOString().split('T')[0],
+          ipfsHash: doc.ipfs_hash,
+          blockchainTx: doc.blockchain_tx
+        })));
+      } else {
+        // Fallback to local storage
+        let userDocs = JSON.parse(localStorage.getItem('userDocs') || '{}');
+        if (!userDocs || Array.isArray(userDocs)) {
+          userDocs = {};
+        }
+        setDocuments(userDocs[userId] || []);
+      }
+    };
+    
+    fetchDocs();
   }, [userId]);
 
   const handleDocSelect = (docId) => {

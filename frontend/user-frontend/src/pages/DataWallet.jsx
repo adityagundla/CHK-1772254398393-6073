@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchAllData, registerData, revokeAccess } from '../services/api';
+import { fetchAllData, registerData, uploadFile } from '../services/api';
 
 const DataWallet = () => {
   const [documents, setDocuments] = useState([]);
@@ -14,17 +14,21 @@ const DataWallet = () => {
   const fetchDocuments = async () => {
     try {
       const data = await fetchAllData();
-      const docs = data.map((item) => ({
+      const mockDocs = data.map((item) => ({
         id: item.id,
-        name: item.name, // Using 'name' conceptually as ipfsHash based on smart contract logic
+        name: item.name,
         type: 'DOC',
         size: '1.0 MB',
         date: new Date().toISOString().split('T')[0],
         ipfsHash: item.name,
         blockchainTx: item.description,
-        sharedWith: [] // Ideally derived from a different API, but mocking empty for now
+        sharedWith: []
       }));
-      setDocuments(docs);
+
+      // Filter unique by id/name from mockDocs (Blockchain returned docs)
+      const uniqueDocs = Array.from(new Map(mockDocs.map(item => [item.name, item])).values());
+      
+      setDocuments(uniqueDocs);
     } catch (error) {
       console.error("Failed to fetch documents:", error);
     }
@@ -48,11 +52,20 @@ const DataWallet = () => {
     setUploading(true);
 
     try {
-      // In this simplified version we don't upload to an external storage service.
-      // We just register the file metadata with the backend and show a local preview.
-      const downloadURL = URL.createObjectURL(selectedFile);
+      const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+      const userId = currentUser.uid || 'anonymous';
 
-      const res = await registerData(selectedFile.name, 'Uploaded: ' + selectedFile.name);
+      // 1. Upload to Pinata via our backend
+      const uploadRes = await uploadFile(selectedFile);
+      const ipfsHash = uploadRes.ipfsHash;
+      
+      if (!ipfsHash) throw new Error("Did not receive IPFS hash from Pinata.");
+
+      const downloadURL = `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
+
+      // 2. Register metadata string representation on Blockchain
+      const res = await registerData(selectedFile.name, 'Uploaded: ' + selectedFile.name, ipfsHash);
+      const txHash = res.transaction || 'Blockchain Registration Failed';
 
       const newDoc = {
         id: documents.length + 1,
@@ -60,24 +73,14 @@ const DataWallet = () => {
         type: selectedFile.type.split('/')[1]?.toUpperCase() || 'FILE',
         size: `${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB`,
         date: new Date().toISOString().split('T')[0],
-        ipfsHash: downloadURL,
-        blockchainTx: res.transaction,
+        ipfsHash: downloadURL, // Link directly instead of just hash 
+        blockchainTx: txHash,
         sharedWith: []
       };
 
+      // Removed Supabase dependencies as requested, updating local state directly
+
       setDocuments([newDoc, ...documents]);
-
-      // Persist the uploaded doc per-user so orgs can search and request access.
-      const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
-      let userDocs = JSON.parse(localStorage.getItem('userDocs') || '{}');
-      if (!userDocs || Array.isArray(userDocs)) {
-        userDocs = {};
-      }
-
-      const userId = currentUser.uid || 'anonymous';
-      const docsForUser = userDocs[userId] || [];
-      userDocs[userId] = [newDoc, ...docsForUser];
-      localStorage.setItem('userDocs', JSON.stringify(userDocs));
 
       // Record the upload in access history so it shows up in Access History.
       const history = JSON.parse(localStorage.getItem('accessHistory') || '[]');
@@ -87,17 +90,16 @@ const DataWallet = () => {
         document: selectedFile.name,
         accessType: 'uploaded',
         timestamp: new Date().toISOString(),
-        transactionHash: res.transaction,
+        transactionHash: txHash,
         blockNumber: null,
         expiryDate: null,
-        purpose: 'Document uploaded'
+        purpose: 'Document uploaded to IPFS and registered'
       });
       localStorage.setItem('accessHistory', JSON.stringify(history));
       window.dispatchEvent(new Event('storage'));
     } catch (error) {
       console.error('Upload failed:', error);
 
-      // Provide more details when backend responds with an error
       let message = 'Upload failed.';
       if (error.response?.data) {
         message += ` ${JSON.stringify(error.response.data)}`;

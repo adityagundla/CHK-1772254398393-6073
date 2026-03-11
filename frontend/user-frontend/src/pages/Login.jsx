@@ -93,15 +93,16 @@ const Login = () => {
 
   const labelStyle = {
     fontSize: '0.9rem',
-    color: '#666',
-    fontWeight: '500'
+    color: '#1e293b',
+    fontWeight: '600'
   };
 
   const inputStyle = {
     padding: '0.75rem',
-    border: '1px solid #ddd',
+    border: '1px solid #cbd5e1',
     borderRadius: '5px',
     fontSize: '1rem',
+    color: '#000000',
     transition: 'border-color 0.3s ease'
   };
 

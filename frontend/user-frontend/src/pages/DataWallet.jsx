@@ -283,13 +283,14 @@ const DataWallet = () => {
   };
 
   const detailLabelStyle = {
-    color: '#666',
+    color: '#475569',
     marginBottom: '0.25rem'
   };
 
   const detailValueStyle = {
     fontWeight: '500',
-    wordBreak: 'break-all'
+    wordBreak: 'break-all',
+    color: '#1e293b'
   };
 
   const sharedWithStyle = {

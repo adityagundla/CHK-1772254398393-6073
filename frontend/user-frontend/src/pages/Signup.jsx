@@ -109,13 +109,13 @@ const Signup = () => {
         
         <form style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }} onSubmit={handleSubmit}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label style={{ fontSize: '0.9rem', color: 'var(--text-color)', opacity: 0.9 }} htmlFor="name">Full Name</label>
+            <label style={{ fontSize: '0.9rem', color: '#1e293b', fontWeight: '600' }} htmlFor="name">Full Name</label>
             <input
               style={{
                 padding: '0.75rem',
-                border: '1px solid var(--glass-border)',
-                background: 'rgba(255, 255, 255, 0.05)',
-                color: 'white',
+                border: '1px solid #cbd5e1',
+                background: 'white',
+                color: '#000000',
                 borderRadius: '8px',
                 fontSize: '1rem',
                 outline: 'none',
@@ -132,13 +132,13 @@ const Signup = () => {
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label style={{ fontSize: '0.9rem', color: 'var(--text-color)', opacity: 0.9 }} htmlFor="email">Email</label>
+            <label style={{ fontSize: '0.9rem', color: '#1e293b', fontWeight: '600' }} htmlFor="email">Email</label>
             <input
               style={{
                 padding: '0.75rem',
-                border: '1px solid var(--glass-border)',
-                background: 'rgba(255, 255, 255, 0.05)',
-                color: 'white',
+                border: '1px solid #cbd5e1',
+                background: 'white',
+                color: '#000000',
                 borderRadius: '8px',
                 fontSize: '1rem',
                 outline: 'none',
@@ -155,13 +155,13 @@ const Signup = () => {
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label style={{ fontSize: '0.9rem', color: 'var(--text-color)', opacity: 0.9 }} htmlFor="password">Password</label>
+            <label style={{ fontSize: '0.9rem', color: '#1e293b', fontWeight: '600' }} htmlFor="password">Password</label>
             <input
               style={{
                 padding: '0.75rem',
-                border: '1px solid var(--glass-border)',
-                background: 'rgba(255, 255, 255, 0.05)',
-                color: 'white',
+                border: '1px solid #cbd5e1',
+                background: 'white',
+                color: '#000000',
                 borderRadius: '8px',
                 fontSize: '1rem',
                 outline: 'none',
@@ -175,17 +175,17 @@ const Signup = () => {
               placeholder="Create a password"
               required
             />
-            <div style={{ fontSize: '0.8rem', color: 'var(--text-color)', opacity: 0.6, marginTop: '0.25rem' }}>Minimum 8 characters</div>
+            <div style={{ fontSize: '0.8rem', color: '#64748b', marginTop: '0.25rem' }}>Minimum 8 characters</div>
           </div>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label style={{ fontSize: '0.9rem', color: 'var(--text-color)', opacity: 0.9 }} htmlFor="confirmPassword">Confirm Password</label>
+            <label style={{ fontSize: '0.9rem', color: '#1e293b', fontWeight: '600' }} htmlFor="confirmPassword">Confirm Password</label>
             <input
               style={{
                 padding: '0.75rem',
-                border: '1px solid var(--glass-border)',
-                background: 'rgba(255, 255, 255, 0.05)',
-                color: 'white',
+                border: '1px solid #cbd5e1',
+                background: 'white',
+                color: '#000000',
                 borderRadius: '8px',
                 fontSize: '1rem',
                 outline: 'none',
@@ -211,8 +211,8 @@ const Signup = () => {
           </button>
         </form>
         
-        <div style={{ textAlign: 'center', marginTop: '1.5rem', color: 'var(--text-color)', opacity: 0.8 }}>
-          Already have an account? <Link to="/login" style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: 'bold' }}>Login</Link>
+        <div style={{ textAlign: 'center', marginTop: '1.5rem', color: '#4b5563' }}>
+          Already have an account? <Link to="/login" style={{ color: '#0284c7', textDecoration: 'none', fontWeight: 'bold' }}>Login</Link>
         </div>
 
         <div style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.8rem', color: 'var(--text-color)', opacity: 0.5 }}>

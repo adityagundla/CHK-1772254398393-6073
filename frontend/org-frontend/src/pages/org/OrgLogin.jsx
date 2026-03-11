@@ -104,9 +104,10 @@ const OrgLogin = () => {
 
   const inputStyle = {
     padding: '0.75rem',
-    border: '1px solid #ddd',
+    border: '1px solid #cbd5e1',
     borderRadius: '5px',
     fontSize: '1rem',
+    color: '#000000',
     transition: 'border-color 0.3s ease'
   };
 

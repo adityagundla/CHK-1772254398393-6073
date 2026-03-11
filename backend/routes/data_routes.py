@@ -151,7 +151,8 @@ def fetch_all_data():
         if user_id:
             docs = DBDocument.query.filter_by(user_id=user_id).all()
         else:
-            docs = DBDocument.query.all()
+            # For security, return empty list if no userId is provided
+            docs = []
         return jsonify([doc.to_dict() for doc in docs])
     except Exception as e:
         print(f"Database Error in fetch_all_data: {e}")

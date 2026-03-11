@@ -107,9 +107,9 @@ const OrgSignup = () => {
   
   const inputStyle = {
     padding: '0.75rem',
-    border: '1px solid var(--glass-border)',
-    background: 'rgba(255, 255, 255, 0.05)',
-    color: 'white',
+    border: '1px solid #cbd5e1',
+    background: 'white',
+    color: '#000000',
     borderRadius: '8px',
     fontSize: '1rem',
     outline: 'none',
@@ -137,21 +137,21 @@ const OrgSignup = () => {
           fontSize: '2rem',
           marginBottom: '0.5rem',
           textAlign: 'center',
-          background: 'linear-gradient(to right, #10b981, #34d399)',
+          background: 'linear-gradient(to right, #059669, #10b981)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent'
         }}>Register Organization</h1>
-        <p style={{ textAlign: 'center', color: 'var(--text-color)', opacity: 0.8, marginBottom: '2rem', fontSize: '0.9rem' }}>Join DataChain as a verified organization</p>
+        <p style={{ textAlign: 'center', color: '#475569', marginBottom: '2rem', fontSize: '0.9rem', fontWeight: '500' }}>Join DataChain as a verified organization</p>
         
         {/* Step Indicator */}
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem', position: 'relative' }}>
-          <div style={{ position: 'absolute', top: '15px', left: '10%', right: '10%', height: '2px', backgroundColor: 'var(--glass-border)', zIndex: 1 }}></div>
+          <div style={{ position: 'absolute', top: '15px', left: '10%', right: '10%', height: '2px', backgroundColor: '#e2e8f0', zIndex: 1 }}></div>
           {[1,2].map((s) => (
             <div key={s} style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', flex: 1 }}>
-              <div style={{ width: '30px', height: '30px', borderRadius: '50%', backgroundColor: step > s ? '#10b981' : (step === s ? '#10b981' : 'rgba(255,255,255,0.1)'), color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', marginBottom: '0.5rem', boxShadow: step === s ? '0 0 10px rgba(16,185,129,0.5)' : 'none' }}>
+              <div style={{ width: '30px', height: '30px', borderRadius: '50%', backgroundColor: step > s ? '#10b981' : (step === s ? '#10b981' : '#e2e8f0'), color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', marginBottom: '0.5rem', boxShadow: step === s ? '0 0 10px rgba(16,185,129,0.5)' : 'none' }}>
                 {s}
               </div>
-              <span style={{ fontSize: '0.85rem', color: step === s ? 'white' : 'var(--text-color)', opacity: step === s ? 1 : 0.6, fontWeight: step === s ? '600' : 'normal' }}>
+              <span style={{ fontSize: '0.85rem', color: step === s ? '#0f172a' : '#64748b', fontWeight: step === s ? '600' : 'normal' }}>
                 {s === 1 ? 'Organization' : 'Security'}
               </span>
             </div>
@@ -164,10 +164,10 @@ const OrgSignup = () => {
           {step === 1 && (
             <div>
               <div style={{ marginBottom: '1rem' }}>
-                <h3 style={{ fontSize: '1.2rem', color: 'white', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '2px solid #10b981' }}>Organization Details</h3>
+                <h3 style={{ fontSize: '1.2rem', color: '#1e293b', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '2px solid #10b981' }}>Organization Details</h3>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
-                  <label style={{ fontSize: '0.9rem', color: 'var(--text-color)', opacity: 0.9 }}>
+                  <label style={{ fontSize: '0.9rem', color: '#475569', fontWeight: '600' }}>
                     Organization Name <span style={{ color: '#ef4444', marginLeft: '0.25rem' }}>*</span>
                   </label>
                   <input
@@ -182,7 +182,7 @@ const OrgSignup = () => {
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
-                  <label style={{ fontSize: '0.9rem', color: 'var(--text-color)', opacity: 0.9 }}>
+                  <label style={{ fontSize: '0.9rem', color: '#475569', fontWeight: '600' }}>
                     Organization Email <span style={{ color: '#ef4444', marginLeft: '0.25rem' }}>*</span>
                   </label>
                   <input
@@ -197,7 +197,7 @@ const OrgSignup = () => {
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
-                  <label style={{ fontSize: '0.9rem', color: 'var(--text-color)', opacity: 0.9 }}>
+                  <label style={{ fontSize: '0.9rem', color: '#475569', fontWeight: '600' }}>
                     Organization ID <span style={{ color: '#ef4444', marginLeft: '0.25rem' }}>*</span>
                   </label>
                   <input
@@ -209,11 +209,11 @@ const OrgSignup = () => {
                     placeholder="Enter unique organization ID"
                     required
                   />
-                  <small style={{ color: 'var(--text-color)', opacity: 0.6 }}>This will be your unique identifier on the platform</small>
+                  <small style={{ color: '#64748b' }}>This will be your unique identifier on the platform</small>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
-                  <label style={{ fontSize: '0.9rem', color: 'var(--text-color)', opacity: 0.9 }}>
+                  <label style={{ fontSize: '0.9rem', color: '#475569', fontWeight: '600' }}>
                     Registration Number <span style={{ color: '#ef4444', marginLeft: '0.25rem' }}>*</span>
                   </label>
                   <input
@@ -228,9 +228,9 @@ const OrgSignup = () => {
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
-                  <label style={{ fontSize: '0.9rem', color: 'var(--text-color)', opacity: 0.9 }}>Organization Type</label>
+                  <label style={{ fontSize: '0.9rem', color: '#475569', fontWeight: '600' }}>Organization Type</label>
                   <select
-                    style={{ ...inputStyle, backgroundColor: '#0f172a' }}
+                    style={{ ...inputStyle, backgroundColor: 'white' }}
                     name="orgType"
                     value={formData.orgType}
                     onChange={handleChange}
@@ -245,10 +245,10 @@ const OrgSignup = () => {
               </div>
 
               <div style={{ marginBottom: '1rem' }}>
-                <h3 style={{ fontSize: '1.2rem', color: 'white', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '2px solid #10b981' }}>Contact Information</h3>
+                <h3 style={{ fontSize: '1.2rem', color: '#1e293b', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '2px solid #10b981' }}>Contact Information</h3>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
-                  <label style={{ fontSize: '0.9rem', color: 'var(--text-color)', opacity: 0.9 }}>Phone Number</label>
+                  <label style={{ fontSize: '0.9rem', color: '#475569', fontWeight: '600' }}>Phone Number</label>
                   <input
                     style={inputStyle}
                     type="tel"
@@ -260,7 +260,7 @@ const OrgSignup = () => {
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
-                  <label style={{ fontSize: '0.9rem', color: 'var(--text-color)', opacity: 0.9 }}>Address</label>
+                  <label style={{ fontSize: '0.9rem', color: '#475569', fontWeight: '600' }}>Address</label>
                   <input
                     style={inputStyle}
                     type="text"
@@ -272,7 +272,7 @@ const OrgSignup = () => {
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
-                  <label style={{ fontSize: '0.9rem', color: 'var(--text-color)', opacity: 0.9 }}>Website</label>
+                  <label style={{ fontSize: '0.9rem', color: '#475569', fontWeight: '600' }}>Website</label>
                   <input
                     style={inputStyle}
                     type="url"
@@ -292,7 +292,7 @@ const OrgSignup = () => {
                 <h3 style={{ fontSize: '1.2rem', color: 'white', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '2px solid #10b981' }}>Account Security</h3>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
-                  <label style={{ fontSize: '0.9rem', color: 'var(--text-color)', opacity: 0.9 }}>
+                  <label style={{ fontSize: '0.9rem', color: '#475569', fontWeight: '600' }}>
                     Password <span style={{ color: '#ef4444', marginLeft: '0.25rem' }}>*</span>
                   </label>
                   <input
@@ -304,7 +304,7 @@ const OrgSignup = () => {
                     placeholder="Create a strong password"
                     required
                   />
-                  <small style={{ color: 'var(--text-color)', opacity: 0.6 }}>Minimum 8 characters with letters and numbers</small>
+                  <small style={{ color: '#64748b' }}>Minimum 8 characters with letters and numbers</small>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
@@ -324,23 +324,23 @@ const OrgSignup = () => {
               </div>
 
               <div style={{ marginBottom: '1rem' }}>
-                <h3 style={{ fontSize: '1.2rem', color: 'white', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '2px solid #10b981' }}>Verification & Terms</h3>
-                <div style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', padding: '1rem', borderRadius: '8px' }}>
+                <h3 style={{ fontSize: '1.2rem', color: '#1e293b', marginBottom: '1rem', paddingBottom: '0.5rem', borderBottom: '2px solid #10b981' }}>Verification & Terms</h3>
+                <div style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0', padding: '1rem', borderRadius: '8px' }}>
                   <p style={{ marginBottom: '0.5rem', display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
                     <input type="checkbox" id="verifyTerms" required style={{ marginTop: '0.2rem' }} />
-                    <label htmlFor="verifyTerms" style={{ fontSize: '0.9rem', opacity: 0.9 }}>
+                    <label htmlFor="verifyTerms" style={{ fontSize: '0.9rem', color: '#4b5563' }}>
                       I confirm that the information provided is accurate and I have the authority to register this organization
                     </label>
                   </p>
                   <p style={{ marginBottom: '0.5rem', display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
                     <input type="checkbox" id="dataTerms" required style={{ marginTop: '0.2rem' }} />
-                    <label htmlFor="dataTerms" style={{ fontSize: '0.9rem', opacity: 0.9 }}>
+                    <label htmlFor="dataTerms" style={{ fontSize: '0.9rem', color: '#4b5563' }}>
                       I agree to comply with data protection regulations and handle user data responsibly
                     </label>
                   </p>
                   <p style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
                     <input type="checkbox" id="blockchainTerms" required style={{ marginTop: '0.2rem' }} />
-                    <label htmlFor="blockchainTerms" style={{ fontSize: '0.9rem', opacity: 0.9 }}>
+                    <label htmlFor="blockchainTerms" style={{ fontSize: '0.9rem', color: '#4b5563' }}>
                       I understand that all access requests will be recorded on the blockchain
                     </label>
                   </p>

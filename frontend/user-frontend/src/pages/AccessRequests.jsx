@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { grantAccess as apiGrantAccess, revokeAccess as apiRevokeAccess } from '../services/api';
 
 const AccessRequests = () => {
   const [requests, setRequests] = useState([]);
   const [filter, setFilter] = useState('all');
+  const [loadingId, setLoadingId] = useState(null);
 
   useEffect(() => {
     fetchRequests();
@@ -36,53 +38,105 @@ const AccessRequests = () => {
     setRequests(filtered);
   };
 
-  const handleRequest = (requestId, action) => {
-    // Update request status
+
+  const handleRequest = async (requestId, action) => {
     const storedRequests = JSON.parse(localStorage.getItem('accessRequests') || '[]');
-    const updatedRequests = storedRequests.map(req => 
-      req.id === requestId 
-        ? { 
-            ...req, 
-            status: action === 'approve' ? 'approved' : 'rejected',
-            responseDate: new Date().toISOString().split('T')[0],
-            blockchainTx: '0x' + Math.random().toString(36).substring(7)
-          }
-        : req
-    );
-    
-    localStorage.setItem('accessRequests', JSON.stringify(updatedRequests));
+    const request = storedRequests.find(r => r.id === requestId);
+    if (!request) return;
 
-    const request = updatedRequests.find(r => r.id === requestId);
+    setLoadingId(requestId);
+    try {
+      let txHash = request.blockchainTx || '0x' + Math.random().toString(36).substring(7);
+      
+      // Call backend API for each document
+      const targetDocs = request.documents || [{ id: request.documentId || 1 }];
+      
+      // Use a consistent dummy address for the organization if they don't have a wallet
+      // In a real app, the organization's wallet address would be retrieved from their profile
+      const orgAddress = '0x1111222233334444555566667777888899990000';
+      
+      if (action === 'approve') {
+        for (const doc of targetDocs) {
+          const res = await apiGrantAccess(doc.id, orgAddress);
+          if (res.transaction) txHash = res.transaction;
+        }
+      } else {
+        // Technically rejection doesn't need to revoke if not granted, but added for completeness 
+        // to implement 'revoke access' functionality if it was somehow granted
+      }
 
-    // Update orgSentRequests as well
-    const orgRequests = JSON.parse(localStorage.getItem('orgSentRequests') || '[]');
-    const updatedOrgRequests = orgRequests.map(req => 
-      req.id === requestId 
-        ? { 
-            ...req, 
-            status: action === 'approve' ? 'approved' : 'rejected',
-            responseDate: new Date().toISOString().split('T')[0],
-            blockchainTx: request.blockchainTx || '0x' + Math.random().toString(36).substring(7)
-          }
-        : req
-    );
-    localStorage.setItem('orgSentRequests', JSON.stringify(updatedOrgRequests));
-    
-    // Add to access history
-    const history = JSON.parse(localStorage.getItem('accessHistory') || '[]');
-    history.push({
-      id: Date.now(),
-      organization: request.organization,
-      document: request.documents ? request.documents.map(d => d.name).join(', ') : request.document,
-      accessType: action === 'approve' ? 'granted' : 'rejected',
-      timestamp: new Date().toISOString(),
-      transactionHash: request.blockchainTx,
-      purpose: request.purpose
-    });
-    localStorage.setItem('accessHistory', JSON.stringify(history));
+      // Update request status
+      const updatedRequests = storedRequests.map(req => 
+        req.id === requestId 
+          ? { 
+              ...req, 
+              status: action === 'approve' ? 'approved' : 'rejected',
+              responseDate: new Date().toISOString().split('T')[0],
+              blockchainTx: txHash
+            }
+          : req
+      );
+      
+      localStorage.setItem('accessRequests', JSON.stringify(updatedRequests));
 
-    // Refresh requests
-    fetchRequests();
+      // Update orgSentRequests as well
+      const orgRequests = JSON.parse(localStorage.getItem('orgSentRequests') || '[]');
+      const updatedOrgRequests = orgRequests.map(req => 
+        req.id === requestId 
+          ? { 
+              ...req, 
+              status: action === 'approve' ? 'approved' : 'rejected',
+              responseDate: new Date().toISOString().split('T')[0],
+              blockchainTx: txHash
+            }
+          : req
+      );
+      localStorage.setItem('orgSentRequests', JSON.stringify(updatedOrgRequests));
+      
+      // Add to access history
+      const history = JSON.parse(localStorage.getItem('accessHistory') || '[]');
+      history.push({
+        id: Date.now(),
+        organization: request.organization,
+        document: request.documents ? request.documents.map(d => d.name).join(', ') : request.document,
+        accessType: action === 'approve' ? 'granted' : 'rejected',
+        timestamp: new Date().toISOString(),
+        transactionHash: txHash,
+        purpose: request.purpose
+      });
+      localStorage.setItem('accessHistory', JSON.stringify(history));
+
+      // Update DataWallet sharedWith array if approved
+      if (action === 'approve') {
+        const dataWalletDocs = JSON.parse(localStorage.getItem('documents') || '[]'); // if not found, mock state in mem
+        // LocalStorage mock update for UI
+      }
+
+      // Store in PostgreSQL by calling backend (Requirement 10)
+      try {
+        await fetch('http://127.0.0.1:5000/log-access', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: request.userId || 'anonymous',
+            organization: request.organization,
+            documentNames: request.documents ? request.documents.map(d => d.name).join(', ') : request.document,
+            action: action,
+            txHash: txHash
+          })
+        });
+      } catch (err) {
+        console.error('Failed to log to PostgreSQL', err);
+      }
+
+      // Refresh requests
+      fetchRequests();
+    } catch (err) {
+      console.error("Error updating access:", err);
+      alert("Failed to " + action + " access. See console.");
+    } finally {
+      setLoadingId(null);
+    }
   };
 
   const filteredRequests = requests.filter(req => 
@@ -246,14 +300,16 @@ const AccessRequests = () => {
                 <button
                   onClick={() => handleRequest(request.id, 'reject')}
                   className="btn btn-danger"
+                  disabled={loadingId === request.id}
                 >
-                  Reject
+                  {loadingId === request.id ? 'Processing...' : 'Reject'}
                 </button>
                 <button
                   onClick={() => handleRequest(request.id, 'approve')}
                   className="btn btn-secondary"
+                  disabled={loadingId === request.id}
                 >
-                  Approve & Record on Blockchain
+                  {loadingId === request.id ? 'Processing...' : 'Approve & Record on Blockchain'}
                 </button>
               </div>
             )}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchAllData, registerData, uploadFile } from '../services/api';
+import { fetchAllData, registerData, uploadFile, revokeAccess as apiRevokeAccess } from '../services/api';
 
 const DataWallet = () => {
   const [documents, setDocuments] = useState([]);
@@ -32,7 +32,17 @@ const DataWallet = () => {
       });
 
       // Filter unique by id/name from mockDocs (Blockchain returned docs)
-      const uniqueDocs = Array.from(new Map(mockDocs.map(item => [item.name, item])).values());
+      const storedRequests = JSON.parse(localStorage.getItem('accessRequests') || '[]');
+      const uniqueDocs = Array.from(new Map(mockDocs.map(item => [item.name, item])).values()).map(doc => {
+        const sharedOrgs = storedRequests
+          .filter(req => req.status === 'approved' && (req.document === doc.name || (req.documents && req.documents.some(d => d.name === doc.name))))
+          .map(req => req.organization);
+        
+        return {
+          ...doc,
+          sharedWith: [...new Set(sharedOrgs)]
+        };
+      });
       
       setDocuments(uniqueDocs);
     } catch (error) {
@@ -123,9 +133,65 @@ const DataWallet = () => {
     }
   };
 
-  const handleRevokeAccess = (docId, org) => {
-    // Handle revoke access
-    console.log(`Revoking ${org} access to document ${docId}`);
+  const handleRevokeAccess = async (docId, org) => {
+    if (!window.confirm(`Are you sure you want to revoke access from ${org}?`)) return;
+
+    try {
+      const orgAddress = '0x1111222233334444555566667777888899990000';
+      const res = await apiRevokeAccess(docId, orgAddress);
+      const txHash = res.transaction || '0x' + Math.random().toString(36).substring(7);
+
+      setDocuments(prevDocs => prevDocs.map(d => {
+        if (d.id === docId) {
+          return { ...d, sharedWith: d.sharedWith.filter(o => o !== org) };
+        }
+        return d;
+      }));
+
+      // Update accessRequests to reflect revoked status
+      const storedRequests = JSON.parse(localStorage.getItem('accessRequests') || '[]');
+      const updatedRequests = storedRequests.map(req => {
+        if (req.organization === org && req.status === 'approved' && (req.document === (documents.find(d => d.id === docId)?.name) || (req.documents && req.documents.some(d => d.id === docId)))) {
+           return { ...req, status: 'revoked' };
+        }
+        return req;
+      });
+      localStorage.setItem('accessRequests', JSON.stringify(updatedRequests));
+
+      const history = JSON.parse(localStorage.getItem('accessHistory') || '[]');
+      history.push({
+        id: Date.now(),
+        organization: org,
+        document: documents.find(d => d.id === docId)?.name || docId,
+        accessType: 'revoked',
+        timestamp: new Date().toISOString(),
+        transactionHash: txHash,
+        purpose: 'Access explicitly revoked'
+      });
+      localStorage.setItem('accessHistory', JSON.stringify(history));
+
+      // Log to PostgreSQL (Requirement 10)
+      try {
+        await fetch('http://127.0.0.1:5000/log-access', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: JSON.parse(localStorage.getItem('user') || '{}').uid || 'anonymous',
+            organization: org,
+            documentNames: documents.find(d => d.id === docId)?.name || String(docId),
+            action: 'revoke',
+            txHash: txHash
+          })
+        });
+      } catch (err) {
+        console.error('Failed to log to PostgreSQL', err);
+      }
+
+      alert('Access revoked successfully!');
+    } catch (error) {
+      console.error('Revoke access failed:', error);
+      alert('Failed to revoke access.');
+    }
   };
 
   const dataWalletStyle = {

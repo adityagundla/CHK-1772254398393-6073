@@ -90,7 +90,17 @@ const Dashboard = () => {
       <h1 style={{ fontSize: '2.5rem', marginBottom: '2rem', background: 'linear-gradient(to right, #38bdf8, #818cf8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
         Dashboard
       </h1>
-      
+      {/* Notification Banner */}
+      {stats.pendingRequests > 0 && (
+        <div style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', borderLeft: '4px solid #f59e0b', padding: '1rem 1.5rem', marginBottom: '2rem', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div>
+            <strong style={{ color: '#d97706', fontSize: '1.1rem' }}>Attention Required</strong>
+            <p style={{ margin: '0.5rem 0 0 0', color: 'var(--text-color)' }}>You have {stats.pendingRequests} pending access {stats.pendingRequests === 1 ? 'request' : 'requests'} that need your approval.</p>
+          </div>
+          <Link to="/access-requests" className="btn" style={{ backgroundColor: '#f59e0b', color: 'white', textDecoration: 'none', padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 'bold' }}>Review Requests</Link>
+        </div>
+      )}
+
       {/* Stats Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
         <div className="card">

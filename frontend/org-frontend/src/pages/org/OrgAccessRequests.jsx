@@ -20,6 +20,23 @@ const OrgAccessRequests = () => {
     filter === 'all' ? true : req.status === filter
   );
 
+  const handleViewDocument = async (doc) => {
+    try {
+      const orgAddress = '0x1111222233334444555566667777888899990000'; // matching dummy org address
+      const response = await fetch(`http://127.0.0.1:5000/check-access?dataId=${doc.id}&user=${orgAddress}`);
+      const result = await response.json();
+      
+      if (result.hasAccess) {
+        window.open(doc.ipfsHash, '_blank');
+      } else {
+        alert("Access Denied: Blockchain permission check failed. Access may have been revoked.");
+      }
+    } catch (err) {
+      console.error("Permission check failed", err);
+      alert("Error verifying blockchain permissions. Backend might be unreachable.");
+    }
+  };
+
   const requestsStyle = {
     padding: '2rem',
     maxWidth: '1200px',
@@ -197,7 +214,18 @@ const OrgAccessRequests = () => {
                 <strong>Documents Requested:</strong>
                 <div style={{ marginTop: '0.5rem' }}>
                   {request.documents.map((doc, index) => (
-                    <span key={index} style={docTagStyle}>{doc.name}</span>
+                    <div key={index} style={{ marginBottom: '0.5rem' }}>
+                      <span style={docTagStyle}>{doc.name}</span>
+                      {request.status === 'approved' && (
+                        <button 
+                          onClick={() => handleViewDocument(doc)}
+                          className="btn btn-primary"
+                          style={{ padding: '0.2rem 0.5rem', fontSize: '0.8rem', marginLeft: '0.5rem' }}
+                        >
+                          View Document
+                        </button>
+                      )}
+                    </div>
                   ))}
                 </div>
               </div>

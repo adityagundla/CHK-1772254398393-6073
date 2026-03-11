@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchAllData } from '../../services/api';
+import { searchUsers } from '../../services/api';
 import { Link } from 'react-router-dom';
 
 const OrgSearchUsers = () => {
@@ -8,41 +8,19 @@ const OrgSearchUsers = () => {
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    // Initial load - show all users
+    handleSearch({ preventDefault: () => {} });
+  }, []);
+
   const handleSearch = async (e) => {
     e.preventDefault();
     setLoading(true);
     setSearched(true);
 
     try {
-      // Load users created via signup
-      const usersData = JSON.parse(localStorage.getItem('users') || '{}');
-      const users = Object.entries(usersData).map(([email, user]) => ({
-        id: user.uid,
-        name: user.name,
-        email,
-        documents: []
-      }));
-
-      // Load documents stored per user (from uploads)
-      let userDocs = JSON.parse(localStorage.getItem('userDocs') || '{}');
-      if (!userDocs || Array.isArray(userDocs)) {
-        userDocs = {};
-      }
-      users.forEach(user => {
-        user.documents = userDocs[user.id] || [];
-      });
-
-      let allUsers = users;
-
-      if (searchTerm) {
-        allUsers = allUsers.filter(user =>
-          user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          user.id.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      }
-
-      setSearchResults(allUsers);
+      const users = await searchUsers(searchTerm);
+      setSearchResults(users);
     } catch (error) {
        console.error("Failed to fetch search data", error);
     } finally {
@@ -151,7 +129,8 @@ const OrgSearchUsers = () => {
     padding: '3rem',
     backgroundColor: 'white',
     borderRadius: '10px',
-    color: '#666'
+    color: '#2c3e50',
+    border: '1px solid #e2e8f0'
   };
 
   return (

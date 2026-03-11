@@ -95,29 +95,29 @@ const Dashboard = () => {
         <div style={{ backgroundColor: 'rgba(245, 158, 11, 0.1)', borderLeft: '4px solid #f59e0b', padding: '1rem 1.5rem', marginBottom: '2rem', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <strong style={{ color: '#d97706', fontSize: '1.1rem' }}>Attention Required</strong>
-            <p style={{ margin: '0.5rem 0 0 0', color: 'var(--text-color)' }}>You have {stats.pendingRequests} pending access {stats.pendingRequests === 1 ? 'request' : 'requests'} that need your approval.</p>
+            <p style={{ margin: '0.5rem 0 0 0', color: '#4b5563' }}>You have {stats.pendingRequests} pending access {stats.pendingRequests === 1 ? 'request' : 'requests'} that need your approval.</p>
           </div>
-          <Link to="/access-requests" className="btn" style={{ backgroundColor: '#f59e0b', color: 'white', textDecoration: 'none', padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 'bold' }}>Review Requests</Link>
+          <Link to="/access-requests" className="btn btn-warning" style={{ backgroundColor: '#f59e0b', color: 'white', textDecoration: 'none', padding: '0.5rem 1rem', borderRadius: '8px', fontWeight: 'bold' }}>Review Requests</Link>
         </div>
       )}
 
       {/* Stats Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
         <div className="card">
-          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{stats.totalDocuments}</div>
-          <div style={{ color: 'var(--text-color)', opacity: 0.8 }}>Total Documents</div>
+          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#0ea5e9' }}>{stats.totalDocuments}</div>
+          <div style={{ color: '#475569', fontWeight: '500' }}>Total Documents</div>
         </div>
         <div className="card">
-          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{stats.pendingRequests}</div>
-          <div style={{ color: 'var(--text-color)', opacity: 0.8 }}>Pending Requests</div>
+          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#0ea5e9' }}>{stats.pendingRequests}</div>
+          <div style={{ color: '#475569', fontWeight: '500' }}>Pending Requests</div>
         </div>
         <div className="card">
-          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{stats.approvedAccess}</div>
-          <div style={{ color: 'var(--text-color)', opacity: 0.8 }}>Approved Access</div>
+          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#0ea5e9' }}>{stats.approvedAccess}</div>
+          <div style={{ color: '#475569', fontWeight: '500' }}>Approved Access</div>
         </div>
         <div className="card">
-          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{stats.walletBalance}</div>
-          <div style={{ color: 'var(--text-color)', opacity: 0.8 }}>Wallet Balance</div>
+          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#0ea5e9' }}>{stats.walletBalance}</div>
+          <div style={{ color: '#475569', fontWeight: '500' }}>Wallet Balance</div>
         </div>
       </div>
 

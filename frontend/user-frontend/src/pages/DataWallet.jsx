@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { fetchAllData, registerData, uploadFile, revokeAccess as apiRevokeAccess } from '../services/api';
+import { fetchAllData, registerData, uploadFile, revokeAccess as apiRevokeAccess, getAccessRequests, registerUser } from '../services/api';
 
 const DataWallet = () => {
   const [documents, setDocuments] = useState([]);
@@ -8,17 +8,33 @@ const DataWallet = () => {
   const [filePreview, setFilePreview] = useState(null);
 
   useEffect(() => {
-    fetchDocuments();
+    const syncUserAndFetch = async () => {
+      const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+      if (currentUser.uid) {
+        try {
+          // Sync user to PostgreSQL if not already there
+          await registerUser({
+            id: currentUser.uid,
+            name: currentUser.name || currentUser.email?.split('@')[0] || 'User',
+            email: currentUser.email
+          });
+        } catch (err) {
+          console.error("Failed to sync user profile:", err);
+        }
+      }
+      fetchDocuments();
+    };
+    
+    syncUserAndFetch();
   }, []);
 
   const fetchDocuments = async () => {
     try {
-      const data = await fetchAllData();
+      const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+      const userId = currentUser.uid || 'anonymous';
+      const data = await fetchAllData(userId);
       const mockDocs = data.map((item) => {
-        let dateStr = new Date().toISOString().split('T')[0];
-        if (item.createdAt) {
-          dateStr = new Date(parseInt(item.createdAt) * 1000).toISOString().split('T')[0];
-        }
+        let dateStr = item.date || new Date().toISOString().split('T')[0];
         return {
           id: item.id,
           name: item.name,
@@ -26,14 +42,14 @@ const DataWallet = () => {
           size: '1.0 MB',
           date: dateStr,
           ipfsHash: item.ipfsHash ? `https://gateway.pinata.cloud/ipfs/${item.ipfsHash}` : '',
-          blockchainTx: item.description,
+          blockchainTx: item.blockchainTx,
           sharedWith: []
         };
       });
 
       // Filter unique by id/name from mockDocs (Blockchain returned docs)
-      const storedRequests = JSON.parse(localStorage.getItem('accessRequests') || '[]');
-      const uniqueDocs = Array.from(new Map(mockDocs.map(item => [item.name, item])).values()).map(doc => {
+      const storedRequests = await getAccessRequests({ userId });
+      const uniqueDocs = mockDocs.map(doc => {
         const sharedOrgs = storedRequests
           .filter(req => req.status === 'approved' && (req.document === doc.name || (req.documents && req.documents.some(d => d.name === doc.name))))
           .map(req => req.organization);
@@ -77,26 +93,22 @@ const DataWallet = () => {
       
       if (!ipfsHash) throw new Error("Did not receive IPFS hash from Pinata.");
 
-      const downloadURL = `https://gateway.pinata.cloud/ipfs/${ipfsHash}`;
+      const fileType = selectedFile.type.split('/')[1]?.toUpperCase() || 'FILE';
+      const fileSize = `${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB`;
 
-      // 2. Register metadata string representation on Blockchain
-      const res = await registerData(selectedFile.name, 'Uploaded: ' + selectedFile.name, ipfsHash);
+      // 2. Register metadata string representation on Blockchain and Postgres
+      const res = await registerData(
+        selectedFile.name, 
+        'Uploaded: ' + selectedFile.name, 
+        ipfsHash,
+        userId,
+        fileType,
+        fileSize
+      );
       const txHash = res.transaction || 'Blockchain Registration Failed';
 
-      const newDoc = {
-        id: documents.length + 1,
-        name: selectedFile.name,
-        type: selectedFile.type.split('/')[1]?.toUpperCase() || 'FILE',
-        size: `${(selectedFile.size / (1024 * 1024)).toFixed(2)} MB`,
-        date: new Date().toISOString().split('T')[0],
-        ipfsHash: downloadURL, // Link directly instead of just hash 
-        blockchainTx: txHash,
-        sharedWith: []
-      };
-
-      // Removed Supabase dependencies as requested, updating local state directly
-
-      setDocuments([newDoc, ...documents]);
+      // Refresh documents list from server
+      fetchDocuments();
 
       // Record the upload in access history so it shows up in Access History.
       const history = JSON.parse(localStorage.getItem('accessHistory') || '[]');
@@ -205,7 +217,8 @@ const DataWallet = () => {
     padding: '2rem',
     borderRadius: '10px',
     boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-    marginBottom: '2rem'
+    marginBottom: '2rem',
+    color: '#2c3e50'
   };
 
   const fileInputStyle = {
@@ -229,7 +242,8 @@ const DataWallet = () => {
     padding: '1.5rem',
     borderRadius: '10px',
     boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-    marginBottom: '1rem'
+    marginBottom: '1rem',
+    color: '#2c3e50'
   };
 
   const docHeaderStyle = {
@@ -260,7 +274,8 @@ const DataWallet = () => {
     marginBottom: '1rem',
     padding: '1rem',
     backgroundColor: '#f8f9fa',
-    borderRadius: '8px'
+    borderRadius: '8px',
+    color: '#2c3e50'
   };
 
   const detailItemStyle = {

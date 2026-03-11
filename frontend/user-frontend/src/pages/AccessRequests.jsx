@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { grantAccess as apiGrantAccess, revokeAccess as apiRevokeAccess } from '../services/api';
+import { grantAccess as apiGrantAccess, revokeAccess as apiRevokeAccess, getAccessRequests, logAccess } from '../services/api';
 
 const AccessRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -14,34 +14,21 @@ const AccessRequests = () => {
   }, []);
 
   const fetchRequests = async () => {
-    // Get requests from localStorage (simulating blockchain/backend)
-    const storedRequests = JSON.parse(localStorage.getItem('accessRequests') || '[]');
     const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
     const userId = currentUser.uid;
+    const email = currentUser.email;
 
-    // Only show requests addressed to the logged-in user
-    const filtered = storedRequests
-      .filter(req => req.userId === userId || req.userEmail === currentUser.email)
-      .map(req => ({
-        id: req.id,
-        userName: req.userName,
-        organization: req.organization,
-        documents: req.documents ? req.documents.map(d => ({ name: d.name, id: d.id })) : [],
-        purpose: req.purpose,
-        requestedDate: req.requestedDate,
-        expiryDate: req.expiryDate,
-        status: req.status,
-        blockchainTx: req.blockchainTx,
-        userId: req.userId
-      }));
-
-    setRequests(filtered);
+    try {
+      const filtered = await getAccessRequests({ userId, email });
+      setRequests(filtered);
+    } catch (error) {
+      console.error("Failed to fetch requests:", error);
+    }
   };
 
 
   const handleRequest = async (requestId, action) => {
-    const storedRequests = JSON.parse(localStorage.getItem('accessRequests') || '[]');
-    const request = storedRequests.find(r => r.id === requestId);
+    const request = requests.find(r => r.id === requestId);
     if (!request) return;
 
     setLoadingId(requestId);
@@ -57,43 +44,12 @@ const AccessRequests = () => {
       
       if (action === 'approve') {
         for (const doc of targetDocs) {
-          const res = await apiGrantAccess(doc.id, orgAddress);
+          const res = await apiGrantAccess(doc.id, orgAddress, requestId);
           if (res.transaction) txHash = res.transaction;
         }
-      } else {
-        // Technically rejection doesn't need to revoke if not granted, but added for completeness 
-        // to implement 'revoke access' functionality if it was somehow granted
       }
 
-      // Update request status
-      const updatedRequests = storedRequests.map(req => 
-        req.id === requestId 
-          ? { 
-              ...req, 
-              status: action === 'approve' ? 'approved' : 'rejected',
-              responseDate: new Date().toISOString().split('T')[0],
-              blockchainTx: txHash
-            }
-          : req
-      );
-      
-      localStorage.setItem('accessRequests', JSON.stringify(updatedRequests));
-
-      // Update orgSentRequests as well
-      const orgRequests = JSON.parse(localStorage.getItem('orgSentRequests') || '[]');
-      const updatedOrgRequests = orgRequests.map(req => 
-        req.id === requestId 
-          ? { 
-              ...req, 
-              status: action === 'approve' ? 'approved' : 'rejected',
-              responseDate: new Date().toISOString().split('T')[0],
-              blockchainTx: txHash
-            }
-          : req
-      );
-      localStorage.setItem('orgSentRequests', JSON.stringify(updatedOrgRequests));
-      
-      // Add to access history
+      // Record in history (local for UI consistency)
       const history = JSON.parse(localStorage.getItem('accessHistory') || '[]');
       history.push({
         id: Date.now(),
@@ -106,24 +62,14 @@ const AccessRequests = () => {
       });
       localStorage.setItem('accessHistory', JSON.stringify(history));
 
-      // Update DataWallet sharedWith array if approved
-      if (action === 'approve') {
-        const dataWalletDocs = JSON.parse(localStorage.getItem('documents') || '[]'); // if not found, mock state in mem
-        // LocalStorage mock update for UI
-      }
-
-      // Store in PostgreSQL by calling backend (Requirement 10)
+      // Log to PostgreSQL (Requirement 10)
       try {
-        await fetch('http://127.0.0.1:5000/log-access', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: request.userId || 'anonymous',
-            organization: request.organization,
-            documentNames: request.documents ? request.documents.map(d => d.name).join(', ') : request.document,
-            action: action,
-            txHash: txHash
-          })
+        await logAccess({
+          userId: request.userId || 'anonymous',
+          organization: request.organization,
+          documentNames: request.documents ? request.documents.map(d => d.name).join(', ') : request.document,
+          action: action,
+          txHash: txHash
         });
       } catch (err) {
         console.error('Failed to log to PostgreSQL', err);
@@ -213,14 +159,16 @@ const AccessRequests = () => {
     marginBottom: '1rem',
     padding: '1rem',
     backgroundColor: '#f8f9fa',
-    borderRadius: '8px'
+    borderRadius: '8px',
+    color: '#1e293b'
   };
 
   const purposeStyle = {
     marginBottom: '1rem',
     padding: '1rem',
     backgroundColor: '#f8f9fa',
-    borderRadius: '8px'
+    borderRadius: '8px',
+    color: '#334155'
   };
 
   const actionButtonsStyle = {
@@ -265,7 +213,7 @@ const AccessRequests = () => {
 
       {/* Requests List */}
       {filteredRequests.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '3rem', color: '#666' }}>
+        <div style={{ textAlign: 'center', padding: '3rem', color: '#4b5563' }}>
           No {filter !== 'all' ? filter : ''} requests found
         </div>
       ) : (
@@ -286,12 +234,12 @@ const AccessRequests = () => {
             
             <div style={detailsGridStyle}>
               <div>
-                <div style={{ color: '#666', fontSize: '0.85rem' }}>Requested Date</div>
-                <div style={{ fontWeight: '500' }}>{request.requestedDate}</div>
+                <div style={{ color: '#475569', fontSize: '0.85rem' }}>Requested Date</div>
+                <div style={{ fontWeight: '500', color: '#1e293b' }}>{request.requestedDate}</div>
               </div>
               <div>
-                <div style={{ color: '#666', fontSize: '0.85rem' }}>Expiry Date</div>
-                <div style={{ fontWeight: '500' }}>{request.expiryDate}</div>
+                <div style={{ color: '#475569', fontSize: '0.85rem' }}>Expiry Date</div>
+                <div style={{ fontWeight: '500', color: '#1e293b' }}>{request.expiryDate}</div>
               </div>
             </div>
             

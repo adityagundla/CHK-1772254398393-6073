@@ -78,9 +78,10 @@ const OrgLogin = () => {
 
   const subtitleStyle = {
     textAlign: 'center',
-    color: '#666',
+    color: '#475569',
     marginBottom: '2rem',
-    fontSize: '0.9rem'
+    fontSize: '0.9rem',
+    fontWeight: '500'
   };
 
   const formStyle = {
@@ -97,8 +98,8 @@ const OrgLogin = () => {
 
   const labelStyle = {
     fontSize: '0.9rem',
-    color: '#666',
-    fontWeight: '500'
+    color: '#1e293b',
+    fontWeight: '600'
   };
 
   const inputStyle = {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { getAccessRequests } from '../../services/api';
 
 const OrgAccessRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -11,9 +12,15 @@ const OrgAccessRequests = () => {
     return () => window.removeEventListener('storage', fetchRequests);
   }, []);
 
-  const fetchRequests = () => {
-    const sentRequests = JSON.parse(localStorage.getItem('orgSentRequests') || '[]');
-    setRequests(sentRequests);
+  const fetchRequests = async () => {
+    try {
+      const orgData = JSON.parse(localStorage.getItem('orgData') || '{}');
+      const organization = orgData.name || 'Organization';
+      const sentRequests = await getAccessRequests({ organization });
+      setRequests(sentRequests);
+    } catch (error) {
+      console.error("Failed to fetch sent requests:", error);
+    }
   };
 
   const filteredRequests = requests.filter(req => 
@@ -144,7 +151,7 @@ const OrgAccessRequests = () => {
     borderRadius: '8px',
     marginBottom: '1rem',
     fontStyle: 'italic',
-    color: '#666'
+    color: '#2c3e50'
   };
 
   const txHashStyle = {
@@ -159,7 +166,7 @@ const OrgAccessRequests = () => {
     padding: '3rem',
     backgroundColor: 'white',
     borderRadius: '10px',
-    color: '#666'
+    color: '#2c3e50'
   };
 
   const pendingCount = requests.filter(r => r.status === 'pending').length;
@@ -236,19 +243,19 @@ const OrgAccessRequests = () => {
               
               <div style={detailsGridStyle}>
                 <div>
-                  <div style={{ color: '#666', fontSize: '0.85rem' }}>Requested Date</div>
-                  <div style={{ fontWeight: '500' }}>{request.requestedDate}</div>
+                  <div style={{ color: '#475569', fontSize: '0.85rem' }}>Requested Date</div>
+                  <div style={{ fontWeight: '500', color: '#2c3e50' }}>{request.requestedDate}</div>
                 </div>
                 <div>
-                  <div style={{ color: '#666', fontSize: '0.85rem' }}>Expiry Date</div>
-                  <div style={{ fontWeight: '500' }}>{request.expiryDate}</div>
+                  <div style={{ color: '#475569', fontSize: '0.85rem' }}>Expiry Date</div>
+                  <div style={{ fontWeight: '500', color: '#2c3e50' }}>{request.expiryDate}</div>
                 </div>
                 <div>
-                  <div style={{ color: '#666', fontSize: '0.85rem' }}>User ID</div>
-                  <div style={{ fontWeight: '500' }}>{request.userId}</div>
+                  <div style={{ color: '#475569', fontSize: '0.85rem' }}>User ID</div>
+                  <div style={{ fontWeight: '500', color: '#2c3e50' }}>{request.userId}</div>
                 </div>
                 <div>
-                  <div style={{ color: '#666', fontSize: '0.85rem' }}>Blockchain TX</div>
+                  <div style={{ color: '#475569', fontSize: '0.85rem' }}>Blockchain TX</div>
                   <div style={txHashStyle}>{request.blockchainTx}</div>
                 </div>
               </div>

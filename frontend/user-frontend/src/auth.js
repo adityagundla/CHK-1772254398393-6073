@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { registerUser } from './services/api';
 
 const TOKEN_KEY = 'token';
 const USER_KEY = 'user';
@@ -23,16 +24,31 @@ export const signup = async ({ name, email, password }) => {
   const userData = {
     name,
     email,
-    uid: data.user.id,
-    registeredAt: data.user.created_at
+    uid: data.user?.id,
+    registeredAt: data.user?.created_at
   };
 
-  localStorage.setItem(TOKEN_KEY, data.session?.access_token || 'pending');
+  // If email confirmation is OFF, data.session will be present.
+  // If we just want to bypass for development, we use a fallback token.
+  const token = data.session?.access_token || 'dev-token-' + Math.random().toString(36).substring(7);
+  
+  localStorage.setItem(TOKEN_KEY, token);
   localStorage.setItem(USER_KEY, JSON.stringify(userData));
   localStorage.setItem(USER_TYPE_KEY, 'user');
   window.dispatchEvent(new Event('storage'));
 
-  return { userData, token: data.session?.access_token };
+  // Mirror to PostgreSQL
+  try {
+    await registerUser({
+      id: userData.uid,
+      name: userData.name,
+      email: userData.email
+    });
+  } catch (e) {
+    console.error('Failed to register user in PostgreSQL', e);
+  }
+
+  return { userData, token };
 };
 
 export const login = async ({ email, password }) => {
@@ -55,6 +71,17 @@ export const login = async ({ email, password }) => {
   localStorage.setItem(USER_KEY, JSON.stringify(userData));
   localStorage.setItem(USER_TYPE_KEY, 'user');
   window.dispatchEvent(new Event('storage'));
+
+  // Ensure mirrored to PostgreSQL
+  try {
+    await registerUser({
+      id: userData.uid,
+      name: userData.name,
+      email: userData.email
+    });
+  } catch (e) {
+    console.error('Failed to register user in PostgreSQL', e);
+  }
 
   return { userData, token: data.session.access_token };
 };

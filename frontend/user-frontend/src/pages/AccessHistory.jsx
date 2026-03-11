@@ -110,14 +110,15 @@ const AccessHistory = () => {
   };
 
   const detailLabelStyle = {
-    color: '#666',
+    color: '#475569',
     marginBottom: '0.25rem',
     fontSize: '0.85rem'
   };
 
   const detailValueStyle = {
     fontWeight: '500',
-    wordBreak: 'break-all'
+    wordBreak: 'break-all',
+    color: '#1e293b'
   };
 
   const txHashStyle = {
@@ -132,7 +133,8 @@ const AccessHistory = () => {
     padding: '1rem',
     backgroundColor: '#f8f9fa',
     borderRadius: '8px',
-    marginTop: '1rem'
+    marginTop: '1rem',
+    color: '#334155'
   };
 
   return (
@@ -154,7 +156,7 @@ const AccessHistory = () => {
 
       {/* History List */}
       {filteredHistory.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '3rem', color: '#666' }}>
+        <div style={{ textAlign: 'center', padding: '3rem', color: '#475569' }}>
           No access history found
         </div>
       ) : (

@@ -50,12 +50,15 @@ export const signupOrg = async ({
     registeredAt: data.user?.created_at
   };
 
-  localStorage.setItem(TOKEN_KEY, data.session?.access_token || 'pending');
+  // If email confirmation is OFF, data.session will be present.
+  const token = data.session?.access_token || 'dev-token-org-' + Math.random().toString(36).substring(7);
+
+  localStorage.setItem(TOKEN_KEY, token);
   localStorage.setItem(USER_TYPE_KEY, 'organization');
   localStorage.setItem(ORG_DATA_KEY, JSON.stringify(orgData));
   window.dispatchEvent(new Event('storage'));
 
-  return { orgData, token: data.session?.access_token };
+  return { orgData, token };
 };
 
 export const loginOrg = async ({ email, password, orgId }) => {

@@ -13,13 +13,13 @@ export const uploadFile = async (file) => {
   return res.data;
 };
 
-export const registerData = async (name, description, dataHash) => {
-  const res = await axios.post(`${API_BASE}/register`, { name, description, dataHash });
+export const registerData = async (name, description, dataHash, userId, type, size) => {
+  const res = await axios.post(`${API_BASE}/register`, { name, description, dataHash, userId, type, size });
   return res.data;
 };
 
-export const grantAccess = async (dataId, user) => {
-  const res = await axios.post(`${API_BASE}/grant-access`, { dataId, user });
+export const grantAccess = async (dataId, user, requestId) => {
+  const res = await axios.post(`${API_BASE}/grant-access`, { dataId, user, requestId });
   return res.data;
 };
 
@@ -43,7 +43,22 @@ export const getRequestCount = async (dataId) => {
   return res.data;
 };
 
-export const fetchAllData = async () => {
-  const res = await axios.get(`${API_BASE}/all-data`);
+export const fetchAllData = async (userId) => {
+  const res = await axios.get(`${API_BASE}/all-data`, { params: { userId } });
+  return res.data;
+};
+
+export const getAccessRequests = async (params) => {
+  const res = await axios.get(`${API_BASE}/get-access-requests`, { params });
+  return res.data;
+};
+
+export const logAccess = async (logData) => {
+  const res = await axios.post(`${API_BASE}/log-access`, logData);
+  return res.data;
+};
+
+export const registerUser = async (userData) => {
+  const res = await axios.post(`${API_BASE}/users/register`, userData);
   return res.data;
 };

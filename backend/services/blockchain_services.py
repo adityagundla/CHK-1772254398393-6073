@@ -52,7 +52,31 @@ def register_data(name, description, data_hash=None):
         "gasPrice": w3.to_wei("20", "gwei")
     })
 
-    return send_transaction(tx)
+    tx_hash = send_transaction(tx)
+    
+    # After registering in DataRegistry, we MUST also register in AccessControl
+    # so that the AccessControl contract knows the data exists and who the owner is.
+    try:
+        receipt = w3.eth.get_transaction_receipt(tx_hash)
+        # The event is DataRegistered(uint indexed dataId, address indexed owner, string ipfsHash)
+        logs = contract.events.DataRegistered().process_receipt(receipt)
+        if logs:
+            data_id = logs[0]['args']['dataId']
+            
+            nonce = w3.eth.get_transaction_count(ACCOUNT_ADDRESS)
+            atx = access_contract.functions.registerData(data_id).build_transaction({
+                "from": ACCOUNT_ADDRESS,
+                "nonce": nonce,
+                "gas": 3000000,
+                "gasPrice": w3.to_wei("20", "gwei")
+            })
+            send_transaction(atx)
+            print(f"Registered dataId {data_id} in AccessControl")
+            return tx_hash, data_id
+    except Exception as e:
+        print(f"Warning: Failed to register in AccessControl: {e}")
+
+    return tx_hash, None
 def request_access(data_id):
 
     nonce = w3.eth.get_transaction_count(ACCOUNT_ADDRESS)

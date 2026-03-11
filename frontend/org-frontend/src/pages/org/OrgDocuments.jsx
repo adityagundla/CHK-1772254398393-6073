@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { supabase } from '../../supabase';
+import { requestAccess, fetchAllData, getUser as fetchUserData } from '../../services/api';
 
 const OrgDocuments = () => {
   const { userId } = useParams();
@@ -13,42 +13,27 @@ const OrgDocuments = () => {
   const [requestSent, setRequestSent] = useState(false);
 
   useEffect(() => {
-    // Load user info from persisted user list
-    const usersData = JSON.parse(localStorage.getItem('users') || '{}');
-    const userRecord = Object.values(usersData).find(u => u.uid === userId);
-    const userInfo = userRecord
-      ? { id: userRecord.uid, name: userRecord.name, email: Object.keys(usersData).find(email => usersData[email].uid === userId) }
-      : { id: userId, name: 'Unknown User', email: '' };
+    const loadData = async () => {
+      try {
+        // Fetch user metadata from Postgres
+        const userData = await fetchUserData(userId);
+        setUser(userData);
 
-    setUser(userInfo);
-
-    const fetchDocs = async () => {
-      const { data: dbDocs, error } = await supabase
-        .from('documents')
-        .select('*')
-        .eq('user_id', userId);
-      
-      if (!error && dbDocs) {
+        // Fetch user documents from Postgres
+        const dbDocs = await fetchAllData(userId);
         setDocuments(dbDocs.map(doc => ({
+          ...doc,
           id: doc.id,
           name: doc.name,
-          type: doc.type,
-          size: doc.size,
-          date: new Date(doc.created_at).toISOString().split('T')[0],
-          ipfsHash: doc.ipfs_hash,
-          blockchainTx: doc.blockchain_tx
+          date: doc.date
         })));
-      } else {
-        // Fallback to local storage
-        let userDocs = JSON.parse(localStorage.getItem('userDocs') || '{}');
-        if (!userDocs || Array.isArray(userDocs)) {
-          userDocs = {};
-        }
-        setDocuments(userDocs[userId] || []);
+      } catch (error) {
+        console.error("Failed to fetch user or documents:", error);
+        setUser({ id: userId, name: 'User', email: 'unknown' });
       }
     };
     
-    fetchDocs();
+    loadData();
   }, [userId]);
 
   const handleDocSelect = (docId) => {
@@ -69,60 +54,47 @@ const OrgDocuments = () => {
     }
   };
 
-  const sendAccessRequest = () => {
-    if (selectedDocs.length === 0) {
-      alert('Please select at least one document');
-      return;
-    }
+    const sendAccessRequest = async () => {
+      if (selectedDocs.length === 0) {
+        alert('Please select at least one document');
+        return;
+      }
 
-    if (!requestPurpose.trim()) {
-      alert('Please provide a purpose for the request');
-      return;
-    }
+      if (!requestPurpose.trim()) {
+        alert('Please provide a purpose for the request');
+        return;
+      }
 
-    setLoading(true);
+      setLoading(true);
 
-    // Create request object
-    const selectedDocuments = documents.filter(doc => selectedDocs.includes(doc.id));
-    const requestData = {
-      id: Date.now(),
-      userId: userId,
-      userName: user.name,
-      userEmail: user.email,
-      organization: JSON.parse(localStorage.getItem('orgData') || '{}').name || 'Organization',
-      documents: selectedDocuments,
-      document: selectedDocuments.map((d) => d.name).join(', '),
-      purpose: requestPurpose,
-      requestedDate: new Date().toISOString().split('T')[0],
-      expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      status: 'pending',
-      blockchainTx: '0x' + Math.random().toString(36).substring(7)
+      // Create request object
+      const selectedDocuments = documents.filter(doc => selectedDocs.includes(doc.id));
+      const orgData = JSON.parse(localStorage.getItem('orgData') || '{}');
+      const requestData = {
+        dataId: selectedDocs[0], // primary doc ID for the contract method
+        userId: userId,
+        userName: user.name,
+        userEmail: user.email,
+        organization: orgData.name || 'Organization',
+        documents: selectedDocuments,
+        document: selectedDocuments.map((d) => d.name).join(', '),
+        purpose: requestPurpose,
+        requestedDate: new Date().toISOString().split('T')[0],
+        expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+      };
+
+      try {
+        await requestAccess(requestData);
+        setLoading(false);
+        setRequestSent(true);
+        setTimeout(() => {
+          navigate('/access-requests');
+        }, 2000);
+      } catch (err) {
+        setLoading(false);
+        alert('Failed to send access request. ' + (err.response?.data?.message || err.message));
+      }
     };
-
-    // Store in localStorage to simulate cross-user communication
-    const existingRequests = JSON.parse(localStorage.getItem('accessRequests') || '[]');
-    existingRequests.push(requestData);
-    localStorage.setItem('accessRequests', JSON.stringify(existingRequests));
-
-    // Also store in organization's sent requests
-    const orgRequests = JSON.parse(localStorage.getItem('orgSentRequests') || '[]');
-    orgRequests.push({
-      ...requestData,
-      fromOrg: true
-    });
-    localStorage.setItem('orgSentRequests', JSON.stringify(orgRequests));
-
-    // Trigger storage listeners so the user view updates live
-    window.dispatchEvent(new Event('storage'));
-
-    setLoading(false);
-    setRequestSent(true);
-
-    // Show success message and redirect
-    setTimeout(() => {
-      navigate('/access-requests');
-    }, 2000);
-  };
 
   const pageStyle = {
     padding: '2rem',
@@ -145,7 +117,8 @@ const OrgDocuments = () => {
     padding: '1.5rem',
     borderRadius: '10px',
     boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-    marginBottom: '2rem'
+    marginBottom: '2rem',
+    color: '#2c3e50'
   };
 
   const docsSectionStyle = {
@@ -153,7 +126,8 @@ const OrgDocuments = () => {
     padding: '1.5rem',
     borderRadius: '10px',
     boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-    marginBottom: '2rem'
+    marginBottom: '2rem',
+    color: '#2c3e50'
   };
 
   const tableStyle = {
@@ -171,7 +145,8 @@ const OrgDocuments = () => {
 
   const tdStyle = {
     padding: '1rem',
-    borderBottom: '1px solid #dee2e6'
+    borderBottom: '1px solid #dee2e6',
+    color: '#2c3e50'
   };
 
   const checkboxStyle = {
@@ -185,7 +160,8 @@ const OrgDocuments = () => {
     padding: '1.5rem',
     borderRadius: '10px',
     boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-    marginBottom: '2rem'
+    marginBottom: '2rem',
+    color: '#2c3e50'
   };
 
   const textareaStyle = {

@@ -64,20 +64,20 @@ const OrgDashboard = () => {
       {/* Stats Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
         <div className="card">
-          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{stats.totalRequests}</div>
-          <div style={{ color: 'var(--text-color)', opacity: 0.8 }}>Total Requests</div>
+          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#10b981' }}>{stats.totalRequests}</div>
+          <div style={{ color: '#475569', fontWeight: '500' }}>Total Requests</div>
         </div>
         <div className="card">
-          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{stats.pendingRequests}</div>
-          <div style={{ color: 'var(--text-color)', opacity: 0.8 }}>Pending</div>
+          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#10b981' }}>{stats.pendingRequests}</div>
+          <div style={{ color: '#475569', fontWeight: '500' }}>Pending</div>
         </div>
         <div className="card">
-          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{stats.approvedAccess}</div>
-          <div style={{ color: 'var(--text-color)', opacity: 0.8 }}>Approved</div>
+          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#10b981' }}>{stats.approvedAccess}</div>
+          <div style={{ color: '#475569', fontWeight: '500' }}>Approved</div>
         </div>
         <div className="card">
-          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: 'var(--primary-color)' }}>{stats.usersWithAccess}</div>
-          <div style={{ color: 'var(--text-color)', opacity: 0.8 }}>Users with Access</div>
+          <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#10b981' }}>{stats.usersWithAccess}</div>
+          <div style={{ color: '#475569', fontWeight: '500' }}>Users with Access</div>
         </div>
       </div>
 

@@ -13,9 +13,9 @@
   --secondary-color: #f472b6;
   --danger-color: #f43f5e;
   --warning-color: #fbbf24;
-  --dark-color: #0f172a;
-  --light-color: #f1f5f9;
-  --text-color: #e2e8f0;
+  --dark-color: #f8fafc;
+  --light-color: #ffffff;
+  --text-color: #1e293b;
   --border-radius: 12px;
   --glass-bg: rgba(15, 23, 42, 0.4);
   --glass-border: rgba(255, 255, 255, 0.1);
@@ -23,7 +23,7 @@
 }
 
 body {
-  background-color: var(--dark-color);
+  background-color: #f1f5f9;
   color: var(--text-color);
   line-height: 1.6;
   overflow-x: hidden;
@@ -40,15 +40,13 @@ body {
 }
 
 .card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
+  background: white;
+  border: 1px solid #e2e8f0;
   border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   padding: 24px;
   margin-bottom: 24px;
-  color: var(--text-color);
+  color: #1a202c;
   transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
@@ -95,15 +93,15 @@ body {
 }
 
 .btn-secondary {
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: white;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
 }
 
 .btn-secondary:hover {
-  background: rgba(255,255,255,0.15);
-  border-color: rgba(255,255,255,0.25);
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  color: #1e293b;
 }
 
 .btn-danger {
@@ -128,28 +126,29 @@ table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
+  background: white;
+  border: 1px solid #e2e8f0;
   border-radius: var(--border-radius);
   overflow: hidden;
+  color: #1a202c;
 }
 
 th {
-  background: rgba(0,0,0,0.2);
-  color: #94a3b8;
+  background: #f8fafc;
+  color: #64748b;
   padding: 16px;
   text-align: left;
   font-weight: 600;
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  border-bottom: 1px solid #e2e8f0;
 }
 
 td {
   padding: 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  color: var(--text-color);
+  border-bottom: 1px solid #f1f5f9;
+  color: #1a202c;
 }
 
 tr:last-child td {
@@ -157,7 +156,7 @@ tr:last-child td {
 }
 
 tr:hover td {
-  background: rgba(255,255,255,0.02);
+  background: #f8fafc;
 }
 
 /* Custom Scrollbar */

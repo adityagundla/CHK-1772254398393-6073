@@ -29,8 +29,8 @@ const Home = () => {
       <section style={{ padding: '6rem 2rem', position: 'relative' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-            <h2 style={{ fontSize: '3rem', marginBottom: '1rem', background: 'linear-gradient(to right, #e2e8f0, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Why Choose DataChain?</h2>
-            <p style={{ fontSize: '1.2rem', color: '#94a3b8' }}>Built on blockchain technology for true data ownership</p>
+            <h2 style={{ fontSize: '3rem', marginBottom: '1rem', background: 'linear-gradient(to right, #1e293b, #475569)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Why Choose DataChain?</h2>
+            <p style={{ fontSize: '1.2rem', color: '#64748b' }}>Built on blockchain technology for true data ownership</p>
           </div>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
@@ -46,8 +46,8 @@ const Home = () => {
                 <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'linear-gradient(135deg, rgba(56,189,248,0.2), rgba(129,140,248,0.2))', border: '1px solid rgba(56,189,248,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem', boxShadow: '0 0 20px rgba(56,189,248,0.2)' }}>
                   <div style={{ width: '24px', height: '24px', backgroundColor: '#38bdf8', borderRadius: '50%', boxShadow: '0 0 15px #38bdf8' }}></div>
                 </div>
-                <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#e2e8f0' }}>{feature.title}</h3>
-                <p style={{ color: '#94a3b8', lineHeight: '1.6' }}>{feature.description}</p>
+                <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#1e293b' }}>{feature.title}</h3>
+                <p style={{ color: '#64748b', lineHeight: '1.6' }}>{feature.description}</p>
               </div>
             ))}
           </div>
@@ -57,8 +57,8 @@ const Home = () => {
       {/* How It Works Layer */}
       <section style={{ padding: '6rem 2rem' }}>
         <div className="container" style={{ textAlign: 'center' }}>
-          <h2 style={{ fontSize: '3rem', marginBottom: '1rem', color: '#e2e8f0' }}>How It Works</h2>
-          <p style={{ fontSize: '1.2rem', color: '#94a3b8', marginBottom: '4rem' }}>Simple, secure, and transparent process</p>
+          <h2 style={{ fontSize: '3rem', marginBottom: '1rem', color: '#1e293b' }}>How It Works</h2>
+          <p style={{ fontSize: '1.2rem', color: '#64748b', marginBottom: '4rem' }}>Simple, secure, and transparent process</p>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem', position: 'relative' }}>
             {[
@@ -71,8 +71,8 @@ const Home = () => {
                 <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'rgba(15, 23, 42, 0.8)', color: '#38bdf8', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', fontWeight: 'bold', margin: '0 auto 1.5rem', border: '2px solid #38bdf8', boxShadow: '0 0 20px rgba(56,189,248,0.3)', backdropFilter: 'blur(10px)' }}>
                   {item.step}
                 </div>
-                <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: '#e2e8f0' }}>{item.title}</h3>
-                <p style={{ color: '#94a3b8' }}>{item.desc}</p>
+                <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem', color: '#1e293b' }}>{item.title}</h3>
+                <p style={{ color: '#64748b' }}>{item.desc}</p>
               </div>
             ))}
           </div>
